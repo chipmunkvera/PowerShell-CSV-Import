@@ -8,8 +8,8 @@ foreach ($User in $file)
 {
     $fname = $User.Firstname
     $lname = $User.Lastname
-    $dept = $User.department
-    $role = $User.role
+    $dept = $User.Department
+    $role = $User.Role
     $username = ($fname + $lname).ToLower()
     $email = $username + '@' + 'org.net'
     $temppass = (convertto-securestring ("Pa$$w0rd!") -AsPlainText -Force) 
