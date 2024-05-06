@@ -20,26 +20,25 @@ foreach ($User in $file)
         Write-Warning "user $fname $lname exists"
     }
 
-    #create users
+    #create the user
     else
     {
     	#create user
-	New-ADUser -Name $username -AccountPassword $temppass -ChangePasswordAtLogon $true -Department $dept -DisplayName $fname -EmailAddress $email -GivenName $fname -Surname $lname -Enabled $True
-        
-	#check if department group exists
-        if (Get-ADGroup -F {name -eq $dept})
-        {
-           Write-Warning "group $dept exists"
-        }
-        
-        #create group
-        else
-        {
-           New-ADGroup -GroupScope Universal -Name $dept
-        }
-    	
-	#add user to group
-    	Add-ADGroupMember -Identity $dept -Members $username
+	    New-ADUser -Name $username -AccountPassword $temppass -ChangePasswordAtLogon $true -Department $dept -DisplayName $fname -EmailAddress $email -GivenName $fname -Surname $lname -Enabled $True
     }
 
+    #check if department group exists
+    if (Get-ADGroup -F {name -eq $dept})
+    {
+        Write-Warning "group $dept exists"
+    }
+
+    #create group
+    else
+    {
+        New-ADGroup -GroupScope Universal -Name $dept
+    }
+
+    #add user to group
+    Add-ADGroupMember -Identity $dept -Members $username
 }
