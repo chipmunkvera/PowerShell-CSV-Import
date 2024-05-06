@@ -1,7 +1,7 @@
 # Obtain the csv file
 $file = Read-Host "Enter CSV path"
 
-$file = Import-Csv $file
+$file = Import-Csv $file | Sort-Object -Property * -Unique
 
 #obtain values from file
 foreach ($User in $file)
@@ -23,8 +23,10 @@ foreach ($User in $file)
     #create users
     else
     {
-    New-ADUser -Name $username -AccountPassword $temppass -ChangePasswordAtLogon $true -Department $dept -DisplayName $fname -EmailAddress $email -GivenName $fname -Surname $lname -Enabled $True
-        #check if department group exists
+    	#create user
+	New-ADUser -Name $username -AccountPassword $temppass -ChangePasswordAtLogon $true -Department $dept -DisplayName $fname -EmailAddress $email -GivenName $fname -Surname $lname -Enabled $True
+        
+	#check if department group exists
         if (Get-ADGroup -F {name -eq $dept})
         {
            Write-Warning "group $dept exists"
@@ -35,8 +37,9 @@ foreach ($User in $file)
         {
            New-ADGroup -GroupScope Universal -Name $dept
         }
-    #add user to group
-    Add-ADGroupMember -Identity $dept -Members $username
+    	
+	#add user to group
+    	Add-ADGroupMember -Identity $dept -Members $username
     }
 
 }
